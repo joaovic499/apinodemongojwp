@@ -19,7 +19,7 @@ const generateToken = (Usuario = {}) => {
 
 router.post("/register", async(req, res) => {
     
-    const {email, password, confirmpassword} = req.body;
+    const {name, email, password, confirmpassword} = req.body;
 
     if(await UsuarioModel.findOne({email})){
         return res.status(400).json({
