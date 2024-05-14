@@ -64,7 +64,7 @@ router.post("/autenticate", async(req, res) => {
     Usuario.password = undefined;
     
     return res.json({
-        Usuario,
+        name: Usuario.name,
         token: generateToken(Usuario)
     });
     
