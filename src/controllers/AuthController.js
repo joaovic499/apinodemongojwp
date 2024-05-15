@@ -33,8 +33,8 @@ router.post("/register", async(req, res) => {
         })
     }
 
-    const Usuario = await UsuarioModel.create(req.body);
-        Usuario.password = undefined;
+    const usuario = await UsuarioModel.create(req.body);
+        usuario.password = undefined;
 
         return res.json({
             Usuario,
@@ -46,26 +46,26 @@ router.post("/register", async(req, res) => {
 router.post("/autenticate", async(req, res) => {
     
     const {email, password} = req.body;
-    const Usuario = await UsuarioModel.findOne({email}).select("+password");
+    const usuario = await UsuarioModel.findOne({email}).select("+password");
  
-    if(!Usuario) {
+    if(!usuario) {
         return res.status(400).json({
             message: "Usuario não encontrado"
         })
     }
 
-    if(!await bcrypt.compare(password, Usuario.password)){
+    if(!await bcrypt.compare(password, usuario.password)){
         return res.status(400).json({
             message: "Senha incorreta!!!"
         })
 
     }
 
-    Usuario.password = undefined;
+    usuario.password = undefined;
     
     return res.json({
-        name: Usuario.name,
-        token: generateToken(Usuario)
+        name: usuario.name,
+        token: generateToken(usuario)
     });
     
 
