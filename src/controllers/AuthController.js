@@ -71,5 +71,42 @@ router.post("/autenticate", async(req, res) => {
 
 })
 
+router.post('/autenticate/changePassword', async(req, res) => {
+    try{
+        const { senhaAtual, novaSenha } = req.body;
+        const token = req.headers.authorization.split(' ')[1];
+
+        if(!token) {
+            return res.status(400).json({ error: "Você não tem permissão para fazer isso"})
+        
+        }
+
+    const decoded = jwt.verify(token, secret);
+    const usuario = await UsuarioModel.findById(decoded.id).select("+password");
+
+    if(!usuario) {
+        return res.status(404).json({ error: "Usuário não encontrado"})
+    }
+
+    const passwordCorreto = await bcrypt.compare(senhaAtual, usuario.password);
+
+    if(!passwordCorreto) {
+        return res.status(400).json({ error: "Senha Atual Incorreta"});
+    }
+    
+    usuario.password = novaSenha;
+
+    await usuario.save();
+
+    return res.json({
+        message: "Senha do Usuario alterada com sucesso"
+    });
+    
+    } catch (error) {
+    return res.status(500).json({ error: "Erro ao alterar a senha do usuario"});
+}
+
+});
+
 
 module.exports = router;
