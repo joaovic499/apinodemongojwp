@@ -37,8 +37,8 @@ router.post("/register", async(req, res) => {
         usuario.password = undefined;
 
         return res.json({
-            Usuario,
-            token: generateToken(Usuario),
+            usuario,
+            token: generateToken(usuario),
             message:"Registrado com sucesso",
     });
 })
